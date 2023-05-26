@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Halaman About</h1>
+<tbody>
+    {% for haze_traj in haze_trajs %}
+    <tr>
+        <th scope="row">{{haze_traj.id}}</th>
+        <td>{{ haze_traj.db_id }}</td>
+        <td>{{ haze_traj.lat }}</td>
+        <td>{{ haze_traj.long }}</td>
+        <td>{{ haze_traj.sumber }}</td>
+        
+    </tr>
+    {% endfor %}
+</tbody>
+    <h1>Halaman About</h1>
+
+{% endblock %}

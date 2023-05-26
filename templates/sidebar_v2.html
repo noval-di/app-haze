@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .sidebar {
+      width: 300px;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #f1f1f1;
+      padding: 20px;
+      transition: 0.5s;
+      z-index: 1;
+      padding-top: 90px;
+    }
+    
+    #map-container {
+      margin-left: 300px; /* Adjust this value to match the width of your sidebar */
+    }
+    
+    .collapsed {
+      margin-left: 0;
+    }
+  </style>
+  <script>
+    function toggleSidebar() {
+      var sidebar = document.querySelector('.sidebar');
+      var mapContainer = document.getElementById('map-container');
+    
+      sidebar.classList.toggle('collapsed');
+      mapContainer.classList.toggle('collapsed');
+    }
+  </script>
+</head>
+<body>
+  <div class="sidebar">
+    <button class="toggle-button" onclick="toggleSidebar()">Toggle Sidebar</button>
+    <!-- Sidebar content here -->
+    <div class="row">
+        <div class="initial_point"> {% block content-initial_point %} {% endblock %}</div>
+        <div class="filter"> {% block content-filter %} {% endblock %}</div>
+        <div class="start_btn"> {% block content-start_btn %} {% endblock %}</div>
+    </div>
+</div>
+  
+  <div id="map-container">
+    <!-- Google Maps or other map API integration here -->
+    {% block content-main_content %}
+          
+    {% endblock %}
+</div>
+</body>
+</html>
+
+{% endblock %}
+  

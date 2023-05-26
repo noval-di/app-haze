@@ -1,0 +1,60 @@
+
+{% extends 'sidebar_v2.html' %}
+
+
+{% block content-initial_point %} Online Simulation{% endblock %}
+
+{% block content-filter %}
+<body>
+  <div class="menu_filter">
+    <form method="post">
+      {% csrf_token %}
+      {{ form }}
+      <div class="menu_button">
+        <input type="submit" value="Submit">
+        <input type="reset" value="reset">
+
+      </div>
+      
+    </form>
+  </div>
+ 
+
+  <style type="text/css">
+  .menu_filter{
+    top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }  
+  .menu_button{
+    padding-top: 10px;
+  }
+
+  </style>
+</body>
+
+{% endblock %}
+
+
+
+
+
+{% block content-start_btn %}  {% endblock %}
+
+{% block content-main_content %}
+<body>
+    <div class= "map">
+      {{ map | safe }}
+    </div>
+       
+
+
+    <style type="text/css">
+    .map{
+      
+      height: 700;
+
+    }  
+    </style>
+</body>
+{% endblock %}

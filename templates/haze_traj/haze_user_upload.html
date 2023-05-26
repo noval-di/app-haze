@@ -1,0 +1,38 @@
+{% extends 'sidebar.html' %}
+
+
+{% block content-initial_point %} Online Simulation{% endblock %}
+
+
+{% block content-filter %}
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form }}
+
+  <button type="submit">Upload</button>
+</form>
+{% endblock %}
+
+
+
+
+
+{% block content-start_btn %}  {% endblock %}
+
+{% block content-main_content %}
+<body>
+  <div class= "map">
+    {{ map | safe }}
+  </div>
+     
+
+
+  <style type="text/css">
+  .map{
+    
+    height: 700;
+
+  }  
+  </style>
+</body>
+{% endblock %}
