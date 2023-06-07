@@ -1,16 +1,24 @@
-{% extends 'sidebar.html' %}
+{% extends 'sidebar_v2.html' %}
 
 
-{% block content-initial_point %} Online Simulation{% endblock %}
+{% block content-initial_point %} {% endblock %}
 
 
 {% block content-filter %}
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form }}
 
-  <button type="submit">Upload</button>
-</form>
+<div class="menu_filter">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form }}
+    <div class="menu_button">
+      <input type="submit" value="Submit">
+      <input type="reset" value="reset">
+
+    </div>
+    
+  </form>
+</div>
+
 {% endblock %}
 
 
@@ -29,10 +37,16 @@
 
   <style type="text/css">
   .map{
-    
-    height: 700;
-
+    height: 900px;
+  }
+  .menu_filter{
+    top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
   }  
+  .menu_button{
+    padding-top: 10px;
+  }
   </style>
 </body>
 {% endblock %}

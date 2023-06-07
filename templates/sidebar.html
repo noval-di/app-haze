@@ -35,11 +35,13 @@
         width: 250px; /* 0 width - change this with JavaScript */
         position: fixed; /* Stay in place */
         z-index: 1; /* Stay on top */
-        top: 50px;
+        top: 60;
+        bottom: 0;
         left: 0;
         background-color: #f8f9fa; /* Black*/
         overflow-x: hidden; /* Disable horizontal scroll */
-        padding-top: 90px; /* Place content 60px from the top */
+        overflow-y: scroll;
+        padding-top: 60px; /* Place content 60px from the top */
         transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
     }
 
@@ -61,7 +63,7 @@
     /* Position and style the close button (top right corner) */
     .sidebar .closebtn {
     position: absolute;
-    top: 0;
+    top: 30;
     right: 25px;
     font-size: 36px;
     margin-left: 50px;
@@ -103,7 +105,7 @@
 
     /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
     function closeNav() {
-    document.getElementById("mySidebar").style.width = "0";
+    document.getElementById("mySidebar").style.width = "0px";
     document.getElementById("main").style.marginLeft = "-250px";
     }
     </script>

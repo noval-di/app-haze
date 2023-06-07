@@ -33,13 +33,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'haze_traj',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'haze_traj',
+    'django_tables2',
 ]
 
 MIDDLEWARE = [
@@ -94,7 +95,17 @@ DATABASES = {
         'PASSWORD': 'hotspot2023',
         'HOST': 'db.erasumduvzkbtuwszsbm.supabase.co',
         'PORT': '5432',
+    },
+    'new_haze':{
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'db_hotspot',
+        'USER': 'hotspot_user',
+        'PASSWORD': 'secret',
+        'HOST': '103.54.170.77',
+        'PORT': '5432',
+        
     }
+    
     
 }
 
@@ -140,8 +151,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+DATE_INPUT_FORMATS = ('%d-%m-%Y','%Y-%m-%d')
 
-DATE_INPUT_FORMATS = ['%d-%m-%Y']
 TIME_INPUT_FORMATS = ['%H:%M']
 
 MEDIA_URL = '/media/'
@@ -151,4 +162,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-DATABASE_ROUTERS = ["routers.db_routers.Auth","routers.db_routers.Haze_traj",]
+DATABASE_ROUTERS = ["routers.db_routers.Auth","routers.db_routers.Haze_traj","routers.db_routers.Haze_traj_new"]

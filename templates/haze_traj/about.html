@@ -1,19 +1,15 @@
-{% extends 'base.html' %}
+
+{% extends 'sidebar_v2.html' %}
+{% load django_tables2 %}
 
 {% block content %}
     <h1>Halaman About</h1>
-<tbody>
-    {% for haze_traj in haze_trajs %}
-    <tr>
-        <th scope="row">{{haze_traj.id}}</th>
-        <td>{{ haze_traj.db_id }}</td>
-        <td>{{ haze_traj.lat }}</td>
-        <td>{{ haze_traj.long }}</td>
-        <td>{{ haze_traj.sumber }}</td>
-        
-    </tr>
-    {% endfor %}
-</tbody>
+
+    <!-- {% for item in haze_list %}
+    <li>{{ item }} </li>
+    {% endfor %} -->
+    {% render_table table %}
+
     <h1>Halaman About</h1>
 
 {% endblock %}

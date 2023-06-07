@@ -25,7 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name= 'index'),
     path('about/', about, name= 'about'),
-    path('haze_initial_hotspot/', input_data_view_2, name= 'input_data_view_2'),
+    path('haze_initial_hotspot/', filtering_input, name= 'filtering_input'),
     path('user_input/', input_data_view, name= 'input_data_view'),
     
     path('user_upload/', upload_data_view, name= 'upload_data_view'),

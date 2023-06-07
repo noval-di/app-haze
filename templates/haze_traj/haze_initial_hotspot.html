@@ -1,11 +1,114 @@
 
 {% extends 'sidebar_v2.html' %}
+{% load django_tables2 %}
 
+{% block content-initial_point %}
 
-{% block content-initial_point %} Online Simulation{% endblock %}
+{% endblock %}
 
 {% block content-filter %}
-<body>
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'template.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  </head>
+  <body>
+
+    <main role="main" class="container">
+      <form method="GET" action=".">
+        <div class="form-row">
+            <div class="form-group col-12">
+                <div class="input-group">
+                    <input class="form-control py-2 border-right-0 border" type="search" name="provinsi_filtered" placeholder="Provinsi..." />
+                    <span class="input-group-append">
+                        <div class="input-group-text bg-transparent">
+                            <i class="fa fa-search"></i>
+                        </div>
+                    </span>
+                </div>
+            </div>        
+        </div>
+        <div class="form-row">
+            <div class="form-group col-12">
+                <div class="input-group">
+                    <input class="form-control py-2 border-right-0 border" type="search" name="kab_kota_filtered" placeholder="Kabupaten/Kota..." />
+                    <span class="input-group-append">
+                        <div class="input-group-text bg-transparent">
+                            <i class="fa fa-search"></i>
+                        </div>
+                    </span>
+                </div>
+            </div>        
+        </div>
+        <div class="form-row">
+            <div class="form-group col-12">
+                <div class="input-group">
+                    <input class="form-control py-2 border-right-0 border" type="search" name="kecamatan_filtered" placeholder="Kecamatan..." />
+                    <span class="input-group-append">
+                        <div class="input-group-text bg-transparent">
+                            <i class="fa fa-search"></i>
+                        </div>
+                    </span>
+                </div>
+            </div>        
+        </div>
+        <div class="form-row">
+          <div class="form-group col-12">
+              <div class="input-group">
+                  <input class="form-control py-2 border-right-0 border" type="search" name="desa_filtered" placeholder="Desa..." />
+                  <span class="input-group-append">
+                      <div class="input-group-text bg-transparent">
+                          <i class="fa fa-search"></i>
+                      </div>
+                  </span>
+              </div>
+          </div>        
+      </div>
+        <div class="form-row">
+
+          <div class="form-group col-12">
+            <label for="initialDateMin">Initial date minimum</label>
+            <input type="date" class="form-control" id="initialDateMin" name="date_min">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-12">
+            <label for="initialDateMax">Initial date maximum</label>
+            <input type="date" class="form-control" id="initialDateMax" name="date_max">
+          </div>
+
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+
+      <hr />
+
+    </main>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
+
+{% endblock %}
+
+
+
+
+
+{% block content-start_btn %}  <body>
   <div class="menu_filter">
     <form method="post">
       {% csrf_token %}
@@ -22,39 +125,71 @@
 
   <style type="text/css">
   .menu_filter{
-    top: 20px;
     padding-left: 20px;
     padding-right: 20px;
   }  
   .menu_button{
-    padding-top: 10px;
+    padding-top: 30px;
+    padding-bottom: 20px;
   }
 
   </style>
-</body>
-
-{% endblock %}
-
-
-
-
-
-{% block content-start_btn %}  {% endblock %}
+</body>{% endblock %}
 
 {% block content-main_content %}
-<body>
-    <div class= "map">
-      {{ map | safe }}
-    </div>
-       
+    <body>
+      <div class= "map">
+        {{ map | safe }}
+      </div>
+
+      <!-- <div class = "filter">
+        <form method="get">
+          {{ filter.form.as_p }}
+          <button type="submit">Filter</button>
+        </form>
+      </div> -->
 
 
-    <style type="text/css">
-    .map{
-      
-      height: 700;
+      <div class="table_django">
+        <div class="row">
 
-    }  
-    </style>
-</body>
+          <div class="col">
+            <h3>Hotspot Table</h3>
+          </div>
+          <div class="col-md-3">
+            <br>
+            <a href="?download=true&format=csv">Download CSV</a>
+            <a href="?download=true&format=txt">Download TXT</a>
+          </div>
+          
+        </div>
+        
+        {% render_table table %}
+      </div>
+
+      <!-- <br>
+            <a href="?download=true&format=csv">Download CSV</a>
+            <a href="?download=true&format=txt">Download TXT</a> -->
+
+      <!-- <div class="table data">
+        {% for item in queryset %}
+        <li>{{ item.nama_provinsi}} - {{item.kabkota}} - {{item.kecamatan}} - {{item.desa}}- {{item.lat}} - {{item.long}} - {{item.date_hotspot_ori}}</li>
+        {% endfor %}
+      </div> -->
+         
+  
+      <style type="text/css">
+      .map{
+        height: 900px;
+      }
+      .menu_filter{
+        top: 20px;
+        padding-left: 20px;
+        padding-right: 20px;
+      }  
+      .menu_button{
+        padding-top: 10px;
+      }
+      </style>
+  </body>
 {% endblock %}
