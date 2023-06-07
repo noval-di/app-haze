@@ -8,8 +8,8 @@
 from django.db import models
 
 
-class Haze_traj(models.Model):
-    db_id = models.BigIntegerField(blank=True, null=True)
+class Haze_traj_db(models.Model):
+    id = models.BigIntegerField(blank=True, primary_key=True)
     created_at = models.DateTimeField(blank=True, null=True)
     hs_id = models.TextField(blank=True, null=True)
     date_hotspot_ori = models.TextField(blank=True, null=True)
@@ -30,11 +30,34 @@ class Haze_traj(models.Model):
     nama_provinsi = models.TextField(blank=True, null=True)
     pulau = models.TextField(blank=True, null=True)
     geom = models.TextField(blank=True, null=True)  # This field type is a guess.
-
+    objects= models.Manager()
     class Meta:
         managed = False
-        abstract = True
         db_table = 'new_hotspot'
-        app_label = 'haze_traj'
+        
+class HotspotSipongi(models.Model):
+    hs_id = models.DateTimeField(blank=True, primary_key=True)
+    date_hotspot_ori = models.DateTimeField(blank=True, null=True)
+    provinsi_id = models.IntegerField(blank=True, null=True)
+    lat = models.FloatField(blank=True, null=True)
+    long = models.FloatField(blank=True, null=True)
+    sumber = models.CharField(max_length=25, blank=True, null=True)
+    ori_sumber = models.CharField(max_length=25, blank=True, null=True)
+    date_hotspot = models.CharField(max_length=50, blank=True, null=True)
+    desa_id = models.CharField(max_length=255,blank=True, null=True)
+    counter = models.IntegerField(blank=True, null=True)
+    confidence = models.IntegerField(blank=True, null=True)
+    confidence_level = models.CharField(max_length=10, blank=True, null=True)
+    kawasan = models.CharField(max_length=255, blank=True, null=True)
+    desa = models.CharField(max_length=255, blank=True, null=True)
+    kecamatan = models.CharField(max_length=255, blank=True, null=True)
+    kabkota = models.CharField(max_length=255, blank=True, null=True)
+    nama_provinsi = models.CharField(max_length=255, blank=True, null=True)
+    pulau = models.CharField(max_length=255, blank=True, null=True)
+    objects= models.Manager()
+    class Meta:
+        managed = False
+        db_table = 'hotspot_sipongi'
+
         
 
