@@ -22,5 +22,5 @@ class HotspotTable(tables.Table):
         attrs = {"class": "table table-responsive"}
     def __str__(self):
         return "HotspotTable: Columns={}, Rows={}".format(len(self.columns), len(self.rows))
-p
+
     

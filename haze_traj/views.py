@@ -17,17 +17,10 @@ import csv
 
 from .filters import HotspotFilter
     
-def about(request):
-    print('123')
-    qs = filter(request)
-    table = HotspotTable(qs)
-    context={
-        # 'haze_list': haze_list,
-        'table': table,
-    }
+def about(request):             #halaman about
     return render (request, 'haze_traj/about.html')
     
-def index(request):
+def index(request):             #halaman utama
     return render (request, 'haze_traj/index.html')
 
 import tablib
@@ -39,13 +32,13 @@ def download_table(table, file_format, filename):
     dataset = tablib.Dataset()
     dataset.headers = [column.verbose_name for column in table.columns]
     for row in table.rows:
-        dataset.append(list(row))
+        dataset.append(list(row))  # Convert the row to a list
 
     if file_format == 'csv':
         response = HttpResponse(dataset.csv, content_type='text/csv')
         response['Content-Disposition'] = f'attachment; filename="{filename}.csv"'
     elif file_format == 'txt':
-        response = HttpResponse(dataset.tsv, content_type='text/plain')
+        response = HttpResponse(dataset.csv, content_type='text/plain')
         response['Content-Disposition'] = f'attachment; filename="{filename}.txt"'
     else:
         response = HttpResponse("Invalid file format.")
@@ -56,29 +49,19 @@ def download_table(table, file_format, filename):
 # filter_table = HotspotFilter(request.GET, queryset=qs)  # Apply the filter
 
 def filtering_input(request):
+    print(request.GET)
     qs = filter(request)
+    # qs = {}
+    # if 'download' not in request.GET: 
+    #     qs = filter(request)
+    print(qs)
     table = HotspotTable(qs)
-
+    # print(qs[:5].__str__())
     table.paginate(page=request.GET.get("page", 1), per_page=10)  #Paginate the table
     RequestConfig(request, paginate={"per_page": 10}).configure(table)  #Configure table pagination
 
-    print(table.__str__(),'table sebelum if')
-    new_table= table
-    print(new_table.__str__(),'new_table sebelum if')
-    if 'download' in request.GET:
-        print(table.__str__(),'table dalam if')
-        print(new_table.__str__(),'new_table dalam if')
-        file_format = request.GET.get('format')
-        filename = 'table_export'
-        print('dalam func')
-        print(table.__str__())
-        response = download_table(table, file_format, filename)
-        return response
-    
-    print(table.__str__(),'table sesudah if')
-    print(new_table.__str__(),'new_table sesudah if')
-    # for item in qs:
-    #     print(item.lat)
+    for item in qs:
+        print(item.lat)
         # tanggal_waktu = item.date_hotspot_ori
         # # str_tanggal_waktu= str(tanggal_waktu)
         # # splittedDateTime_partition= str_tanggal_waktu.split('+')
@@ -94,144 +77,138 @@ def filtering_input(request):
     m = folium.Map(zoom_start=4.5 , location=[-3.0893, 117.9213])
     
     if request.method == "POST":
+        print(request.POST.get('format'))
         form = HazeInitialForm(request.POST)
-        if form.is_valid():
+        if request.POST.get('type')== 'download':
+            file_format = request.POST.get('format')
+            filename = 'table_export'
+            response = download_table(table, file_format, filename)
+            return response
+        elif request.POST.get('type')=='generate_traj':
+            if form.is_valid():
             
-            altitudes = [int(form.cleaned_data['altitude_input'])]         
-            runtime = int(form.cleaned_data['runtime_input'])
-            
-            basename = 'colgate'
-            
-            for item in qs: 
-                    provinsi = item.nama_provinsi
-                    kab_kota = item.kabkota
-                    kecamatan = item.kecamatan
-                    desa = item.desa
-                    tanggal_waktu = item.date_hotspot_ori
-                    satelit = item.sumber
-                    confidence = item.confidence_level
-                    latitude = item.lat
-                    longitude = item.long
-                    
-                    location = (latitude, longitude)
-                    #####################
-
-                    
-                    ##############################
-                    
-                    # str_date_time_timestamps = str_tanggal +' '+ str_waktu
-                    # str_date_time_timestamps_partition = str_date_time_timestamps.split(' ')
-                    # date_part = datetime.strptime(str_date_time_timestamps_partition[0], '%d-%m-%Y')
-                    # time_part = datetime.strptime(str_date_time_timestamps_partition[1], '%H:%M')
-                    
-                    # combined_datetime_part = datetime.combine(date_part.date(), time_part.time())
-                    
-                    # if str_date_time_timestamps_partition[2] == 'WIB':
-                    #     tz = timezone('Asia/Jakarta')
-                    # elif str_date_time_timestamps_partition[2] == 'WITA':
-                    #     tz = timezone('Asia/Makassar')
-                    # elif str_date_time_timestamps_partition[2] == 'WIT':
-                    #     tz = timezone('Asia/Jayapura')
-                    # else:
-                    #     tz = utc
-                        
-                    # datetime_utc = tz.localize(combined_datetime_part).astimezone(utc)
-                    
-                    # #print(datetime_utc)
-                    
-                    date_fix = str(tanggal_waktu)
-                    splittedDateTime= date_fix.split(' ')
-                    splittedDate=splittedDateTime[0]
-                    splittedTime=splittedDateTime[1]
-                    # print('ini tanggal',splittedDate)
-                    # print('ini waktu',splittedTime)
-                    
-                    str_splittedTime=str(splittedTime)
-                    # print('str split time', str_splittedTime)
-                    
-                    working_dir = r'/home/noval/Downloads/hysplit.v5.2.3_UbuntuOS20.04.4LTS/working'
-                    storage_dir = r'/home/noval/Kuliah/App Haze/colgate'
-                    meteo_dir = r'/home/noval/Kuliah/App Haze/meteo'
-                    splittedDate=splittedDateTime[0]
-                    splittedDate_part= splittedDate.split('-')
-                    years = [int(splittedDate_part[0])]
-                    months = [int(splittedDate_part[1])]
-                    
-                    str_splittedTime_part= str_splittedTime.split(':')
-                    hours = [int(str_splittedTime_part[0])]
-                    # print('hours int', hours)
-                    # print('str hours',str_splittedTime_part[0])
-                    
-                    
-                    str_coordinates=''.join(str(num).replace('.', '').replace(',', '') for num in location)
-                    # print('str coords', str_coordinates)
+                altitudes = [int(form.cleaned_data['altitude_input'])]         
+                runtime = int(form.cleaned_data['runtime_input'])
                 
-                    filter_path=splittedDate_part[0]+splittedDate_part[1]+splittedDate_part[2]+str_splittedTime_part[0]+str_coordinates
-
-                    pysplit.generate_bulktraj(basename, working_dir, storage_dir, meteo_dir,
-                                                years, months, hours, altitudes, location, runtime,
-                                                monthslice=slice(int(splittedDate_part[2])-1, int(splittedDate_part[2]), 1), get_reverse=False,
-                                                get_clipped=False, hysplit = "/home/noval/Downloads/hysplit.v5.2.3_UbuntuOS20.04.4LTS/exec/hyts_std")
-
+                basename = 'colgate'
+                
+                for item in qs: 
+                        print(item)
+                        provinsi = item.nama_provinsi
+                        kab_kota = item.kabkota
+                        kecamatan = item.kecamatan
+                        desa = item.desa
+                        tanggal_waktu = item.date_hotspot_ori
+                        satelit = item.sumber
+                        confidence = item.confidence_level
+                        latitude = item.lat
+                        longitude = item.long
+                        
+                        location = (latitude, longitude)
+                        
+                        date_fix = str(tanggal_waktu)
+                        splittedDateTime= date_fix.split(' ')
+                        splittedDate=splittedDateTime[0]
+                        splittedTime=splittedDateTime[1]
+                        # print('ini tanggal',splittedDate)
+                        # print('ini waktu',splittedTime)
+                        
+                        str_splittedTime=str(splittedTime)
+                        # print('str split time', str_splittedTime)
+                        
+                        working_dir = r'/home/noval/Downloads/hysplit.v5.2.3_UbuntuOS20.04.4LTS/working'
+                        storage_dir = r'/home/noval/Kuliah/App Haze/colgate'
+                        meteo_dir = r'/home/noval/Kuliah/App Haze/meteo'
+                        splittedDate=splittedDateTime[0]
+                        splittedDate_part= splittedDate.split('-')
+                        years = [int(splittedDate_part[0])]
+                        months = [int(splittedDate_part[1])]
+                        
+                        str_splittedTime_part= str_splittedTime.split(':')
+                        hours = [int(str_splittedTime_part[0])]
+                        # print('hours int', hours)
+                        # print('str hours',str_splittedTime_part[0])
+                        
+                        str_coordinates=''.join(str(num).replace('.', '').replace(',', '') for num in location)
+                        # print('str coords', str_coordinates)
                     
-                    str_altitudes = ''.join(str(num).replace('.', '') for num in altitudes)
-                    #visual
-                    print(filter_path)
-                    path = '/home/noval/Kuliah/App Haze/colgate/'+'*'+str_altitudes+'*'+filter_path+'*'
-                    print('path is', path)
-                    trajgroup = pysplit.make_trajectorygroup((path))
+                        filter_path=splittedDate_part[0]+splittedDate_part[1]+splittedDate_part[2]+str_splittedTime_part[0]+str_coordinates
 
-                    for traj in trajgroup[::5]:
-                        line = traj.path
-                        print(list(line.coords))
-                        lists=list(line.coords)
-                        print('list=', lists)
+                        pysplit.generate_bulktraj(basename, working_dir, storage_dir, meteo_dir,
+                                                    years, months, hours, altitudes, location, runtime,
+                                                    monthslice=slice(int(splittedDate_part[2])-1, int(splittedDate_part[2]), 1), get_reverse=False,
+                                                    get_clipped=False, hysplit = "/home/noval/Downloads/hysplit.v5.2.3_UbuntuOS20.04.4LTS/exec/hyts_std")
 
-                        result=[]
-                        for tpl in lists:
-                            result.append(tpl[:2])
-                                
-                        new_list=[(t[1], t[0]) for t in result]        
-                        print("result")
-                        print(new_list)
-                        print('testt')
-                        
-                        final_latlong=[]
-                        for x, y, z in line.coords:
-                            latlongs= ('({}, {})'. format(y,x,z))
-                            final_latlong.append(latlongs)
+                        str_altitudes = ''.join(str(num).replace('.', '') for num in altitudes)
+                        #visual
+                        print(filter_path)
+                        path = '/home/noval/Kuliah/App Haze/colgate/'+'*'+str_altitudes+'*'+filter_path+'*'
+                        print('path is', path)
+                        trajgroup = pysplit.make_trajectorygroup((path))
 
-                        trail_coordinates = [
-                            new_list
-                            ]
-                        
-                        if confidence == 'Low':
-                            color = 'green'
-                        elif confidence == 'low':
-                            color = 'green'
-                        elif confidence == 'Medium':
-                            color = 'orange'
-                        elif confidence == 'medium':
-                            color = 'orange'
-                        else:
-                            color = 'red'
+                        for traj in trajgroup[::5]:
+                            line = traj.path
+                            print(list(line.coords))
+                            lists=list(line.coords)
+                            print('list=', lists)
+
+                            result=[]
+                            for tpl in lists:
+                                result.append(tpl[:2])
+                                    
+                            new_list=[(t[1], t[0]) for t in result]        
+                            print("result")
+                            print(new_list)
+                            print('testt')
                             
-                        labels= 'testest'
-                        
-                        folium.PolyLine(trail_coordinates, tooltip=new_list[0], color=color).add_to(m)
-                        
-                        folium.Marker(new_list[0], tooltip='Click For More Info', 
-                                      popup=folium.Popup(popup_html_user_upload(provinsi,kab_kota,kecamatan,desa,splittedDate,splittedTime,satelit,confidence,latitude,longitude), max_width=250), 
-                                      icon=folium.Icon(color=color, icon='fire', prefix='fa')).add_to(m)
-                        
-                        # polyline.add_child(marker)
-                        # map_html = m.get_root().render()
+                            final_latlong=[]
+                            for x, y, z in line.coords:
+                                latlongs= ('({}, {})'. format(y,x,z))
+                                final_latlong.append(latlongs)
 
-                        # Enable ClickForMarker plugin
-                        
-                     
-                        
-                        
+                            trail_coordinates = [
+                                new_list
+                                ]
+                            
+                            if confidence == 'Low':
+                                color = 'green'
+                            elif confidence == 'low':
+                                color = 'green'
+                            elif confidence == 'Medium':
+                                color = 'orange'
+                            elif confidence == 'medium':
+                                color = 'orange'
+                            else:
+                                color = 'red'
+                                
+                            
+                            folium.PolyLine(trail_coordinates, tooltip=new_list[0], color=color).add_to(m)
+                            
+                            for i in range(1, len(new_list)):
+                                dot_icon = folium.CustomIcon(
+                                icon_image=f'data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="{color}" /></svg>',
+                                icon_size=(5, 5))
+                                
+                                #print(tanggal_waktu,'ini datefixxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+                                #print(type(tanggal_waktu))
+                                tanggal_waktu += timedelta(minutes=30)
+                                #print(tanggal_waktu, 'ini stardate############################################')
+                                
+                                date_component = tanggal_waktu.date()
+                                time_component = tanggal_waktu.time()
+                                #print(date_component, 'ini date_component############################################')
+                                print(time_component, 'ini time_component############################################')
+
+                                latitude_path, longitude_path = new_list[i]
+                                time_path = splittedTime
+                                folium.Marker(new_list[i], tooltip='ini perjam', 
+                                        popup=folium.Popup(popup_html_user_upload(provinsi,kab_kota,kecamatan,desa,date_component,time_component,satelit,confidence,latitude_path,longitude_path), max_width=250), 
+                                        icon=dot_icon).add_to(m)
+                            
+                            folium.Marker(new_list[0], tooltip='Click For More Info', 
+                                        popup=folium.Popup(popup_html_user_upload(provinsi,kab_kota,kecamatan,desa,splittedDate,splittedTime,satelit,confidence,latitude,longitude), max_width=250), 
+                                        icon=folium.Icon(color=color, icon='fire', prefix='fa')).add_to(m)
+                                
     else:
         form = HazeInitialForm()
 
@@ -280,23 +257,21 @@ def filter(request):
     return qs
 
 
-    
 
-def haze_initial_hotspot(request):
-    return render (request, 'haze_traj/haze_initial_hotspot.html')
+# def haze_initial_hotspot(request):
+#     return render (request, 'haze_traj/haze_initial_hotspot.html')
 
-def user_input(request):
-    return render (request, 'haze_traj/haze_user_input.html')
+# def user_input(request):
+#     return render (request, 'haze_traj/haze_user_input.html')
 
 
 from django.http import HttpResponse
 from .forms import InputDataForm
-
 import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def input_data_view(request):
+def input_data_view(request):               #halaman haze initial user input
     m = folium.Map(zoom_start=4.5 , location=[-3.0893, 117.9213])
     if request.method == "POST": 
         form = InputDataForm(request.POST) 
@@ -404,22 +379,14 @@ def input_data_view(request):
     return render (request, 'haze_traj/haze_user_input.html', context)
 
 
-    
-
-######################################################################
-
-######################################################################
-
 from .forms import UploadDataForm
-
-
 from datetime import datetime, timedelta
 from pytz import timezone, utc
 from folium import plugins
-
 from django.core.files.storage import FileSystemStorage
+from datetime import datetime, timedelta
 
-def upload_data_view(request):
+def upload_data_view(request):                  #halaman haze initial txt file
     m = folium.Map(height='60%', zoom_start=4.5 , location=[-3.0893, 117.9213],zoom_control=True)
     if request.method == "POST":
         form = UploadDataForm(request.POST, request.FILES)
@@ -468,7 +435,8 @@ def upload_data_view(request):
                         
                     datetime_utc = tz.localize(combined_datetime_part).astimezone(utc)
                     
-                    #print(datetime_utc)
+                    print('####################################################################################')
+                    print(datetime_utc, 'ini datetime utc')
                     
                     date_fix = str(datetime_utc)
                     splittedDateTime= date_fix.split(' ')
@@ -490,12 +458,12 @@ def upload_data_view(request):
                     
                     str_splittedTime_part= str_splittedTime.split(':')
                     hours = [int(str_splittedTime_part[0])]
-                    print('hours int', hours)
-                    print('str hours',str_splittedTime_part[0])
+                    #print('hours int', hours)
+                    #print('str hours',str_splittedTime_part[0])
                     
                     
                     str_coordinates=''.join(str(num).replace('.', '').replace(',', '') for num in location)
-                    print('str coords', str_coordinates)
+                    #print('str coords', str_coordinates)
                 
                     filter_path=splittedDate_part[0]+splittedDate_part[1]+splittedDate_part[2]+str_splittedTime_part[0]+str_coordinates
 
@@ -511,21 +479,21 @@ def upload_data_view(request):
                     path = '/home/noval/Kuliah/App Haze/colgate/'+'*'+str_altitudes+'*'+filter_path+'*'
                     print('path is', path)
                     trajgroup = pysplit.make_trajectorygroup((path))
-
+                    
                     for traj in trajgroup[::5]:
                         line = traj.path
-                        print(list(line.coords))
+                        # print(list(line.coords))
                         lists=list(line.coords)
-                        print('list=', lists)
+                        # print('list=', lists)
 
                         result=[]
                         for tpl in lists:
                             result.append(tpl[:2])
                                 
                         new_list=[(t[1], t[0]) for t in result]        
-                        print("result")
-                        print(new_list)
-                        print('testt')
+                        # print("result")
+                        # print(new_list)
+                        # print('testt')
                         
                         final_latlong=[]
                         for x, y, z in line.coords:
@@ -542,22 +510,32 @@ def upload_data_view(request):
                             color = 'orange'
                         else:
                             color = 'red'
+                        
+                        folium.PolyLine(trail_coordinates, tooltip="", color=color).add_to(m)
+                        
+                        for i in range(1, len(new_list)):
+                            dot_icon = folium.CustomIcon(
+                            icon_image=f'data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="{color}" /></svg>',
+                            icon_size=(5, 5))
                             
-                        labels= 'testest'
-                        
-                        folium.PolyLine(trail_coordinates, tooltip="haze", color=color).add_to(m)
-                        
+                            datetime_utc += timedelta(minutes=30)
+                            print(datetime_utc, 'ini stardate############################################')
+                            
+                            date_component = datetime_utc.date()
+                            time_component = datetime_utc.time()
+                            print(date_component, 'ini date_component############################################')
+                            print(time_component, 'ini time_component############################################')
+
+                            latitude_path, longitude_path = new_list[i]
+                            
+                            folium.Marker(new_list[i], tooltip='ini perjam', 
+                                      popup=folium.Popup(popup_html_user_upload(provinsi,kab_kota,kecamatan,desa,date_component,time_component,satelit,confidence,latitude_path,longitude_path), max_width=250), 
+                                      icon=dot_icon).add_to(m)
+                            
                         folium.Marker(new_list[0], tooltip='Click For More Info', 
                                       popup=folium.Popup(popup_html_user_upload(provinsi,kab_kota,kecamatan,desa,splittedDate,splittedTime,satelit,confidence,latitude,longitude), max_width=250), 
                                       icon=folium.Icon(color=color, icon='fire', prefix='fa')).add_to(m)
-                        
-                        # polyline.add_child(marker)
-                        # map_html = m.get_root().render()
-
-                        # Enable ClickForMarker plugin
-                        
-                        
-                        
+                                      
     else:
         form = UploadDataForm()
 
