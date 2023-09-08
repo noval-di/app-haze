@@ -1,5 +1,5 @@
 # Forest and Land Fires Haze Trajectory Web Apps
-
+![Screenshot from 2023-08-05 05-24-17 (1)](https://github.com/noval-di/app-haze/assets/78836819/3be20712-86c2-4e7d-a9d3-65e4a93607bd)
 Forest and Land Fires Haze Trajectory Web Apps used to build simulations and display visualization of smoke haze trajectories due to forest and land fires. The simulation was built using the Pysplit module and the Hysplit Desktop Application, and using Folium as the visualization module.
 
 ## Environment Setup
@@ -28,5 +28,6 @@ Forest and Land Fires Haze Trajectory Web Apps used to build simulations and dis
    
    trajname = (basename + m_str + '{:04}'.format(a) + season + fnameyr + "{0:02}{1:02}{2:02}".format(m, d, h) + str_coordinates)
    ```
+   ![Screenshot from 2023-08-10 13-32-05 (1)](https://github.com/noval-di/app-haze/assets/78836819/bd9691ed-fba4-4d51-b64d-ebd4fa6eee1d)
 6. Forest and Land Fires Haze Trajectory Web Apps are ready to use.
    
