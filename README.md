@@ -20,7 +20,7 @@ Forest and Land Fires Haze Trajectory Web Apps used to build simulations and dis
    ```python
    git clone https://github.com/noval-di/app-haze
    ```
-3. Download and Install the Hysplit Desktop application because requires a local installation of HYSPLIT. The location of the `hyts_std` executable must be known.
+3. Download and Install the Hysplit Desktop application because requires a local installation of HYSPLIT. The location of the `hyts_std` executable must be known. <br />
    ![Screenshot from 2023-09-08 07-52-15](https://github.com/noval-di/app-haze/assets/78836819/a3b7dd60-b539-4ecf-9ea7-94985c27cc71)
 4. In each developed simulation module requires three arguments indicate locations of the HYSPLIT working directory, the desired and existing trajectory storage directory, and the directory that contains the meteorology files. <br />
    ![Screenshot from 2023-09-08 07-50-51](https://github.com/noval-di/app-haze/assets/78836819/d4929498-71f8-452e-9ba2-e0a88dfd1e6a)
