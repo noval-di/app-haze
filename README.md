@@ -21,13 +21,15 @@ Forest and Land Fires Haze Trajectory Web Apps used to build simulations and dis
    git clone https://github.com/noval-di/app-haze
    ```
 3. Download and Install the Hysplit Desktop application because requires a local installation of HYSPLIT. The location of the `hyts_std` executable must be known.
+   ![Screenshot from 2023-09-08 07-52-15](https://github.com/noval-di/app-haze/assets/78836819/a3b7dd60-b539-4ecf-9ea7-94985c27cc71)
 4. In each developed simulation module requires three arguments indicate locations of the HYSPLIT working directory, the desired and existing trajectory storage directory, and the directory that contains the meteorology files.
+   ![Screenshot from 2023-09-08 07-50-51](https://github.com/noval-di/app-haze/assets/78836819/d4929498-71f8-452e-9ba2-e0a88dfd1e6a)
 5. The Pysplit package used has modifications made to obtain more specific output names. Modifications were made by adding the string coordinate attribute to the trajectory_generator.py file and then adding it to the trajname argument.
    ```sh
    str_coordinates=''.join(str(num).replace('.','').replace(',','')  for num in coordinates)
    
    trajname = (basename + m_str + '{:04}'.format(a) + season + fnameyr + "{0:02}{1:02}{2:02}".format(m, d, h) + str_coordinates)
    ```
-   ![Screenshot from 2023-08-10 13-32-05 (1)](https://github.com/noval-di/app-haze/assets/78836819/bd9691ed-fba4-4d51-b64d-ebd4fa6eee1d)
+   ![Screenshot from 2023-09-08 07-53-11](https://github.com/noval-di/app-haze/assets/78836819/c1eb26f8-8162-4753-8302-c83fb50639c6)
 6. Forest and Land Fires Haze Trajectory Web Apps are ready to use.
    
